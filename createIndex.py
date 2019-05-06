@@ -13,10 +13,10 @@ porter=PorterStemmer()
 
 class CreateIndex:
 
-	def __init__(self):
-		self.stopWords_file = "stopwords.dat"
-		self.corpus_file = "testCorpus.csv"
-		self.index_file = "testIndex.pickle"
+	def __init__(self, stopwordsfile, corpusfile, indexfile):
+		self.stopWords_file = stopwordsfile
+		self.corpus_file = corpusfile
+		self.index_file = indexfile
 		self.index = defaultdict(list) # inverted index
 
 	def storeStopwords(self):
@@ -57,9 +57,8 @@ class CreateIndex:
 	
 	def saveIndexToFile(self):
 		# saves the index to a pickle file so that it can be loaded later
-		copyDict = self.index
 		pickle_out = open(self.index_file,"wb")
-		pickle.dump(copyDict, pickle_out)
+		pickle.dump(self.index, pickle_out)
 		pickle_out.close()
 	
 	def loadIndexFromFile(self):
@@ -68,7 +67,7 @@ class CreateIndex:
 		self.index = pickle.load(pickle_in)
 
 if __name__=="__main__":
-	c=CreateIndex()
+	c=CreateIndex("stopwords.dat", "testCorpus.csv", "testIndex.pickle")
 	c.storeStopwords()
 	c.createIndex()
 	# c.loadIndexFromFile()

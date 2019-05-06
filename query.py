@@ -31,6 +31,8 @@ class Query:
 		self.index = pickle.load(pickle_in)
 
 	def getRelevantDocuments(self, query):
+		query = ''.join(c for c in query if c not in punctuation)
+		query = query.lower()
 		# performs a phrase query to return relevant documents that have the exact query within the document
 		# will return this list containing relevant docs later
 		relevantDocs = []
