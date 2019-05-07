@@ -1,4 +1,8 @@
-# Toogle
+# Search engine project for independent study
+<!-- 
+Authors: Tyler Schon, Nick Murray
+Date: May, 2019
+-->
 
 First run the create index program:
 python createIndex.py
@@ -7,6 +11,8 @@ Then run the query index program:
 python query.py
 
 We store an inverted index in a python dictionary, which holds information about the corpus in terms of words, documents, and word positioning.  Our query algorithm uses the index to match queries with documents.
+
+First, create an index by running "createIndex.py". Then, try querying the index by running "query.py" and typing in a query; note you can also check out our precision/recall through this file.  Create the ngrams table by running "create_ngram_table.py".  Then, run the ngrams program by running "ngrams.py" and typing in a query.
 
 Things to do:
 implement ui?
