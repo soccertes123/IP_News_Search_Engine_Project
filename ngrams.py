@@ -25,7 +25,10 @@ class Ngrams:
             probability = self.getProbability(word, grams)
             probMatrix[i] = probability
         # return the top 5 words
-        return self.topList(probMatrix, nextWordList, topX)
+        try:
+            return self.topList(probMatrix, nextWordList, topX)
+        except:
+            return []
 
     # ************************************ TO IMPLEMENT ************************************
     def getNextWords(self):
