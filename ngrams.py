@@ -58,7 +58,10 @@ class Ngrams:
         countQuery = self.getFrequency(queryList)
         queryList.append(nextWord)
         countNext = self.getFrequency(queryList)
-        return float(math.log(countNext)+1)/float(math.log(countQuery)+1)
+        try:
+            return float(math.log(countNext)+1)/float(math.log(countQuery)+1)
+        except:
+            return 0
 
     def getFrequency(self, wordList):
         # given a list of words, returns a count of how many times a phrase occurred in that order from the corpus
