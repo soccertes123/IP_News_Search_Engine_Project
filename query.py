@@ -13,10 +13,10 @@ porter=PorterStemmer()
 
 class Query:
 
-	def __init__(self):
-		self.stopWords_file = "stopwords.dat"
-		self.corpus_file = "testCorpus.csv"
-		self.index_file = "testIndex.pickle"
+	def __init__(self, stopwordsfile, corpusfile, picklefile):
+		self.stopWords_file = stopwordsfile
+		self.corpus_file = corpusfile
+		self.index_file = picklefile
 		self.index=defaultdict(list) # inverted index
 
 	def storeStopwords(self):
@@ -82,8 +82,55 @@ class Query:
 		# got this trick from https://www.geeksforgeeks.org/python-intersection-two-lists/
 		return set(list1).intersection(list2)
 
+class Test:
+	def __init__(self, queryfile, queryobject):
+		# constructor
+		self.queryFile = queryfile
+		self.QueryObj = queryobject
+		# correctDocs will hold the correct documents to retrieve for a given query
+		self.correctDocs = defaultdict(list)
+		self.retrievedDocs = defaultdict(list)
+		corp = pd.read_csv(self.queryFile, encoding = "mac_roman")
+		for i, query in enumerate(corp['query']):
+			strDocs = corp['documents'][i]
+			liStrDocs = strDocs.split(',')
+			liDocs = []
+			for id in liStrDocs:
+				liDocs.append(int(id))
+			# add the list of correct documents to the dictionary
+			self.correctDocs[query] = liDocs
+			self.retrievedDocs[query] = queryobject.getRelevantDocuments(query)
+    
+	def testPrecision(self):
+		listOfPrecisions = []
+		for query, docs in self.correctDocs.items():
+			# avoid divide by zero errors
+			if len(self.retrievedDocs[query]) != 0:
+				intersection = self.QueryObj.intersection(docs, self.retrievedDocs[query])
+				# precision is the amount of correctly returned docs divided by the amount of docs that were returned
+				listOfPrecisions.append(float(len(intersection))/float(len(self.retrievedDocs[query])))
+		# take the average precision and return it
+		avgPrecision = 0.0
+		for prec in listOfPrecisions:
+			avgPrecision += prec
+		return avgPrecision/float(len(listOfPrecisions))
+
+	def testRecall(self):
+		listOfRecalls = []
+		for query, docs in self.correctDocs.items():
+			# avoid divide by zero errors
+			if len(docs) != 0:
+				intersection = self.QueryObj.intersection(docs, self.retrievedDocs[query])
+				# recall is the amount of correctly returned docs divided by the amount of docs that should have been returned
+				listOfRecalls.append(float(len(intersection))/float(len(docs)))
+		# take the average recall and return it
+		avgRecall = 0.0
+		for rec in listOfRecalls:
+			avgRecall += rec
+		return avgRecall/float(len(listOfRecalls))
+
 if __name__=="__main__":
-	q=Query()
+	q=Query("stopwords.dat", "testCorpus.csv", "testIndex.pickle")
 	q.storeStopwords()
 	q.loadIndexFromFile()
 	query = input("Enter a query: ")
@@ -96,3 +143,10 @@ if __name__=="__main__":
 			# print out relevant titles
 			print(corp['title'][id-1])
 			txt = corp['title'][id-1] + " " + corp['body'][id-1]
+	# qTest will be the query object used to test precision and recall with our sample test data
+	qTest=Query("stopwords.dat", "precision_recall_test_corpus.csv", "testIndex.pickle")
+	qTest.storeStopwords()
+	qTest.loadIndexFromFile()
+	t = Test("testQueries.csv", qTest)
+	print("precision: ", t.testPrecision())
+	print("recall: ", t.testRecall())
