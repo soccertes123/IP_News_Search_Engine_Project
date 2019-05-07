@@ -15,32 +15,36 @@ class NgramTable:
             contentList = f.readlines()
             for line in contentList:
                 li = line.split(":")
-                self.addToTable(li[2], li[1], gram)
+                done = -1
+                for i in range(1, gram+1):
+                    if (done == -1):
+                        self.addToTable(li[2], li[1], i)
+                    else:
+                        break
         return
 
     def addToTable(self, phrase, amount, gram):
         # adds segments of the phrase to the gram table based off of how many grams are passed in
-        li = []
         wordList = phrase.split()
         if (len(wordList) < gram):
             s = ""
             for word in wordList:
                 s += word + " "
-            li.append(s[:-1])
-            if (s[:-1 in self.table]):
+            if (s[:-1] in self.table):
                 self.table[s[:-1]] += amount
             else:
                 self.table[s[:-1]] = amount
+            return -1
         else:
             for i in range(0, len(wordList)-gram+1):
                 s = ""
                 for k in range(i, i+gram):
                     s += wordList[k] + " "
-                if (s[:-1 in self.table]):
+                if (s[:-1] in self.table):
                     self.table[s[:-1]] += amount
                 else:
                     self.table[s[:-1]] = amount
-        return
+            return 1
 
     def saveIndexToFile(self):
         # saves the table to a pickle file so that it can be loaded later
@@ -56,4 +60,4 @@ class NgramTable:
 if __name__ == "__main__":
     c = NgramTable("queries.txt", "ngram_table.pickle")
     c.createTable(4)
-    
+    c.saveIndexToFile()

@@ -17,3 +17,4 @@ Tyler: create an ngrams program
 
 Other things to do:
 implement a ranking system upon document retrieval
+precision/recall
