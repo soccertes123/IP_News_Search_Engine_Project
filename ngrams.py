@@ -30,7 +30,6 @@ class Ngrams:
         except:
             return []
 
-    # ************************************ TO IMPLEMENT ************************************
     def getNextWords(self):
         # given a query, returns a list of the possible next words that could occur based on our index
         li = []
@@ -47,7 +46,6 @@ class Ngrams:
                     li.append(key[qLen:])
         return li
 
-    # ************************************ TO IMPLEMENT ************************************
     def getProbability(self, nextWord, grams):
         # returns probability of nextWord based on query
         # grams is the amount of grams for our model
