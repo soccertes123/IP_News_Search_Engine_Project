@@ -1,7 +1,6 @@
 import sys
 import re
 import pandas as pd
-import csv
 from string import punctuation
 import pickle
 from porterStemmer import PorterStemmer
@@ -144,7 +143,7 @@ if __name__=="__main__":
 			print(corp['title'][id-1])
 			txt = corp['title'][id-1] + " " + corp['body'][id-1]
 	# qTest will be the query object used to test precision and recall with our sample test data
-	qTest=Query("stopwords.dat", "precision_recall_test_corpus.csv", "testIndex.pickle")
+	qTest=Query("stopwords.dat", "precision_recall_test_corpus.csv", "testPRIndex.pickle")
 	qTest.storeStopwords()
 	qTest.loadIndexFromFile()
 	t = Test("testQueries.csv", qTest)

@@ -64,7 +64,7 @@ def precision_app():
 @app.route('/recall_test', methods=['GET'])
 def recall_app():
     # returns the recall
-    qTest=Query("stopwords.dat", "precision_recall_test_corpus.csv", "testIndex.pickle")
+    qTest=Query("stopwords.dat", "precision_recall_test_corpus.csv", "testPRIndex.pickle")
     qTest.storeStopwords()
     qTest.loadIndexFromFile()
     t = Test("testQueries.csv", qTest)
