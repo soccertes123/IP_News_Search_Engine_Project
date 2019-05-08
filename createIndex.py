@@ -8,6 +8,7 @@ from porterStemmer import PorterStemmer
 from collections import defaultdict
 from array import array
 import gc
+import math
 
 porter=PorterStemmer()
 
@@ -29,25 +30,30 @@ class CreateIndex:
 		# creates an inverse index out of a dictionary to represent word positions in documents
 		corp = pd.read_csv(self.corpus_file, encoding = "mac_roman")
 		for i, body in enumerate(corp['body']):
-			# combine title and body of document
-			txt = corp['title'][i] + " " + body
-			# now get rid of punctuation and case
-			txt = ''.join(c for c in txt if c not in punctuation)
-			txt = txt.lower()
-			wordList = txt.split()
-			
-			# create a temporary dictionary for words in the document
-			tempDict = defaultdict(list)
-			position = 0
-			for word in wordList:
-				w = porter.stem(word, 0, len(word)-1)
-				if w not in self.stopword_list:
-					try:
-						tempDict[w][1].append(position)
-					except:
-						tempDict[w] = [corp['id'][i], [position]]
-					position += 1
-			self.mergeIndex(tempDict)
+			# can't have nan errors
+			try:
+				if math.isnan(float(corp['title'][i])):
+					pass
+			except:
+				# combine title and body of document
+				txt = corp['title'][i] + " " + body
+				# now get rid of punctuation and case
+				txt = ''.join(c for c in txt if c not in punctuation)
+				txt = txt.lower()
+				wordList = txt.split()
+				
+				# create a temporary dictionary for words in the document
+				tempDict = defaultdict(list)
+				position = 0
+				for word in wordList:
+					w = porter.stem(word, 0, len(word)-1)
+					if w not in self.stopword_list:
+						try:
+							tempDict[w][1].append(position)
+						except:
+							tempDict[w] = [corp['id'][i], [position]]
+						position += 1
+				self.mergeIndex(tempDict)
 		self.saveIndexToFile()
 
 	def mergeIndex(self, localDict):
@@ -67,7 +73,7 @@ class CreateIndex:
 		self.index = pickle.load(pickle_in)
 
 if __name__=="__main__":
-	c=CreateIndex("stopwords.dat", "testCorpus.csv", "testIndex.pickle")
+	c=CreateIndex("stopwords.dat", "testCorpus.csv", "testCorpus.pickle")
 	c.storeStopwords()
 	c.createIndex()
 	# c.loadIndexFromFile()
