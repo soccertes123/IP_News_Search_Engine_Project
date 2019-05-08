@@ -51,7 +51,7 @@ def predict_app(input):
 @app.route('/precision_test', methods=['GET'])
 def precision_app():
     # returns the precision
-    qTest=Query("stopwords.dat", "precision_recall_test_corpus.csv", "testIndex.pickle")
+    qTest=Query("stopwords.dat", "precision_recall_test_corpus.csv", "testPRIndex.pickle")
     qTest.storeStopwords()
     qTest.loadIndexFromFile()
     t = Test("testQueries.csv", qTest)
